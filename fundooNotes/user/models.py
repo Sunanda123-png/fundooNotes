@@ -1,14 +1,13 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
 
-class User(models.Model):
+class User(AbstractUser):
     """
-    created this class for table in database
+    this class created for adding the table in database
     """
-    user_name = models.CharField(max_length=200)
-    first_name = models.CharField(max_length=200)
-    last_name = models.CharField(max_length=200)
-    age = models.IntegerField()
-    mobile = models.CharField(max_length=10)
-    password = models.CharField(max_length=20)
-    email = models.EmailField(max_length=40)
+    age = models.IntegerField(verbose_name="Age")
+    is_verified = models.IntegerField()
+
+    USERNAME_FIELD = "username"
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'password']

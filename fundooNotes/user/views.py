@@ -1,9 +1,10 @@
 import json
 import logging
 
-from django.contrib.auth.models import auth, User
+from django.contrib.auth.models import auth
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from .models import User
 
 
 logging.basicConfig(filename="views.log", filemode="w")
@@ -22,6 +23,7 @@ def user_registration(request):
             user_name = data.get("user_name")
             first_name = data.get("first_name")
             last_name = data.get("last_name")
+            age = data.get("age")
             password = data.get("password")
             email = data.get("email")
 
@@ -30,11 +32,12 @@ def user_registration(request):
             elif User.objects.filter(email=email).exists():
                 return JsonResponse({"message":"This email is already taken"})
             else:
-                user = User.objects.create_user(username=user_name, first_name=first_name, last_name=last_name, password=password, email=email)
+                user = User.objects.create_user(username=user_name, first_name=first_name, last_name=last_name, age=age,password=password, email=email, is_verified=0)
                 user.save()
                 return JsonResponse({"message":"data added successfully","data":data})
     except Exception as e:
         logging.error(e)
+        print(e)
 
 
 @csrf_exempt
