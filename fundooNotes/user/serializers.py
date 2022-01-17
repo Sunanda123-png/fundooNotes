@@ -19,4 +19,4 @@ class UserSerializer(serializers.Serializer):
         for creating the user
         :param validate_data: validating the api data
         """
-        return User.objects.create(**validate_data)
+        return User.objects.create_user(**validate_data)
