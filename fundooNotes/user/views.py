@@ -1,4 +1,3 @@
-import json
 import logging
 from .models import User
 from .serializers import UserSerializer
