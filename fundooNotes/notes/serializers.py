@@ -22,13 +22,3 @@ class NotesSerializer(serializers.ModelSerializer):
             user_id=validate_data.get("user_id"),
         )
         return notes
-
-    def update(self, instance, data):
-        """
-        Update and return an existing user instance, given the validated data.
-        """
-        instance.title = data.get('title', instance.title)
-        instance.description = data.get('description', instance.description)
-        instance.user_id = data.get('user_id', instance.user_id)
-        instance.save()
-        return instance
