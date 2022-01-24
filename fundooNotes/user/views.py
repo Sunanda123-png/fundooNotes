@@ -1,6 +1,8 @@
 import logging
-from .models import User
-from .serializers import UserSerializer
+
+from rest_framework.exceptions import ValidationError
+
+from user.serializers import UserSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -23,11 +25,22 @@ class UserRegistration(APIView):
             serializer = UserSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             serializer.create(validate_data=serializer.data)
-            return Response({"message": "Registered successfully", "data": serializer.data["username"]},
-                            status=status.HTTP_201_CREATED)
+            return Response(
+                {
+                    "message": "Registered successfully",
+                    "data": serializer.data["username"]
+                },
+                status=status.HTTP_201_CREATED)
+        except ValidationError:
+            logging.error("Validation failed")
+
         except Exception as e:
             logging.error(e)
-            return Response({"message": "validation failed"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {
+                    "message": "data storing failed"
+                },
+                status=status.HTTP_400_BAD_REQUEST)
 
 
 class Login(APIView):
@@ -42,11 +55,15 @@ class Login(APIView):
             password = request.data.get("password")
             user = auth.authenticate(username=username, password=password)
             if user is not None:
-                user.save()
-                serializer = UserSerializer(user)
-                return Response({"message": "login successfully", "data": serializer.data["username"]},
-                                status=status.HTTP_201_CREATED)
-            return Response({"message": "invalid user"}, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
-            logging.error(e)
-
+                return Response(
+                    {
+                        "message": "login successfully"
+                    },
+                    status=status.HTTP_200_OK)
+            return Response(
+                {
+                    "message": "login failed"
+                },
+                status=status.HTTP_404_NOT_FOUND)
+        except ValidationError:
+            logging.error("Authentication failed")

@@ -4,7 +4,7 @@ from .models import User
 
 class UserSerializer(serializers.Serializer):
     """
-    Serializer is used to converting the json data
+    Serializer is used to converting the python object
     """
     username = serializers.CharField(required=True,max_length=200)
     first_name = serializers.CharField(max_length=200)
