@@ -38,36 +38,34 @@ class Cache:
         except Exception as e:
             raise e
 
-    def update_note_to_cache(self, user_id, note):
+    def update_note_to_cache(self, user_id, updatednote):
         """
         for updating the note in cache
         :param user_id: id of note
-        :param note: note details
-        :return: updated note list
+        :param updatednote: note details
         """
         note_list = RedisCode().get(user_id)
         if note_list is None:
-            RedisCode().cache.set(user_id, json.dumps([note]))
+            RedisCode().cache.set(user_id, json.dumps([updatednote]))
             return
         for note in note_list:
-            if RedisCode().cache.get(user_id):
-                note.set(note)
-                note_list.append(note)
+            if updatednote.id==note.get(id):
+                note.update(updatednote)
                 return
         else:
             raise ObjectDoesNotExist
 
-    def delete_note_to_cache(self, id):
+    def delete_note_to_cache(self, user_id):
         """
         for deleting the note from cache
         :param id: id of the note
-        :return: note list
+        :return: note
         """
-        note_list = RedisCode().cache.get(id)
+        note_list = RedisCode().cache.get(user_id)
         if note_list is None:
             raise ObjectDoesNotExist
         for note in note_list:
-            if RedisCode().cache.get(id) == note.pk:
+            if RedisCode().cache.get(id) == note.get(id):
                 del(note)
                 return
         else:
