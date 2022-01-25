@@ -82,7 +82,7 @@ class Notes(APIView):
             serializer = NotesSerializer(note, data=request.data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
-            Cache().add_note_to_cache(request.data.get(id), serializer.data)
+            Cache().add_note_to_cache(request.data.get("user_id"), serializer.data)
             return Response(
                 {
                     "message": "Data updated successfully",
@@ -114,7 +114,7 @@ class Notes(APIView):
         try:
             note = Note.objects.get(pk=request.data["id"])
             note.delete()
-            Cache().delete_note_to_cache(user_id,)
+            Cache().delete_note_to_cache(request.data.get("id"))
             return Response(
                 {
                     "message": "Data deleted"
