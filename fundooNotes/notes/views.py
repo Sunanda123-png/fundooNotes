@@ -114,7 +114,7 @@ class Notes(APIView):
         try:
             note = Note.objects.get(pk=request.data["id"])
             note.delete()
-            Cache().delete_note_to_cache(id)
+            Cache().delete_note_to_cache(user_id,)
             return Response(
                 {
                     "message": "Data deleted"
