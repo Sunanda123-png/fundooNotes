@@ -49,7 +49,7 @@ class Cache:
             RedisCode().cache.set(user_id, json.dumps([updatednote]))
             return
         for note in note_list:
-            if updatednote.id == note.get(id):
+            if updatednote.get(id) == note.get(id):
                 note.update(updatednote)
                 return
         else:
