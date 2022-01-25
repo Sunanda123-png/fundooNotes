@@ -49,24 +49,25 @@ class Cache:
             RedisCode().cache.set(user_id, json.dumps([updatednote]))
             return
         for note in note_list:
-            if updatednote.id==note.get(id):
+            if updatednote.id == note.get(id):
                 note.update(updatednote)
                 return
         else:
             raise ObjectDoesNotExist
 
-    def delete_note_to_cache(self, user_id):
+    def delete_note_to_cache(self, user_id, note_id):
         """
         for deleting the note from cache
-        :param id: id of the note
+        :param user_id: user id
+        :param note_id: id of the note
         :return: note
         """
         note_list = RedisCode().cache.get(user_id)
         if note_list is None:
             raise ObjectDoesNotExist
         for note in note_list:
-            if RedisCode().cache.get(id) == note.get(id):
-                del(note)
+            if RedisCode().cache.get(note_id) == note.get(id):
+                del (note)
                 return
         else:
             raise ObjectDoesNotExist
