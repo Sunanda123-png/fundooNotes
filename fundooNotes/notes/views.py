@@ -82,7 +82,7 @@ class Notes(APIView):
             serializer = NotesSerializer(note, data=request.data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
-            Cache().add_note_to_cache(request.data.get("id"), serializer.data)
+            Cache().add_note_to_cache(request.data.get("user_id"), serializer.data)
             return Response(
                 {
                     "message": "Data updated successfully",
