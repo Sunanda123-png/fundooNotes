@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import dotenv_values
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,11 +41,13 @@ INSTALLED_APPS = [
     'rest_framework',
     'user.apps.UserConfig',
     'notes',
-    # 'django_celery_results',
+    'django_celery_results',
+    'corsheaders',
 ]
 AUTH_USER_MODEL = "user.User"
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -53,7 +56,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
+CORS_ALLOW_ALL_ORIGINS = True
 ROOT_URLCONF = 'fundooNotes.urls'
 
 TEMPLATES = [
@@ -148,11 +151,21 @@ CACHES = {
 
 #   CELERY SETTINGS
 
-# CELERY_SETTINGS_URL = 'redis://127.0.0.1:6379'
-# CELERY_ACCEPT_CONTENT = ['APPLICATION/JSON']
-# CELERY_RESULT_SERIALIZER = 'json'
-# CELERY_TASK_SERIALIZER = 'json'
-# CELERY_TIMEZONE = 'Asia/Kolkata'
-#
-# CELERY_RESULT_BACKEND = 'django-db'
+CELERY_SETTINGS_URL = 'redis://127.0.0.1:6379'
+CELERY_ACCEPT_CONTENT = ['APPLICATION/JSON']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Kolkata'
 
+CELERY_RESULT_BACKEND = 'redis'
+
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
+#   SMTP Settings
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+config = dotenv_values(".env")
+EMAIL_PORT = config.get("EMAIL_PORT")
+EMAIL_HOST = config.get("EMAIL_HOST")
+EMAIL_HOST_USER = config.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = config.get("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = config.get("DEFAULT_FROM_EMAIL")
