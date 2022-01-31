@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import auth
-
+from user.task import send_mail
 logging.basicConfig(filename="views.log", filemode="w")
 
 
@@ -25,6 +25,7 @@ class UserRegistration(APIView):
             serializer = UserSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             serializer.create(validate_data=serializer.data)
+            send_mail.delay(serializer.data["email"])
             return Response(
                 {
                     "message": "Registered successfully",

@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from notes.models import Note
 from notes.serializers import NotesSerializer
 from notes.utility import Cache
+from notes.task import test
 
 logging.basicConfig(filename="views.log", filemode="w")
 
@@ -26,6 +27,7 @@ class Notes(APIView):
             serializer.is_valid(raise_exception=True)
             serializer.save()
             Cache().add_note_to_cache(request.data.get("user_id"),serializer.data)
+            test.delay()
             return Response(
                 {
                     "message": "Data store successfully",
